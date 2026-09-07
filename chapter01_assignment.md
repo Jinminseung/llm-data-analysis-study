@@ -242,7 +242,7 @@ LLM 사용 기록에서 어떤 의사결정 과정을 확인할 수 있는지 �
 ### 나의 해석과 판단
 
 Prompt Log를 남기는 것이 왜 필요한지 자신의 말로 작성하세요.
-
+단순히 llm의 제안을 그대로 사용하는 것이 아닌 본인이 어떤 점을 보완했는지, 그 근거는 무엇인지 논리적으로 되돌아볼 수 있다. 분석을 llm이 시키는대로 하기만 하는 것이 아니라, 본인이 수행하고 있는 과정이 분석의 어떤 목적을 위해 하고 있는 것인지 파악 가능하다.
 
 ### Evidence
 
@@ -263,7 +263,7 @@ Prompt Log를 남기는 것이 왜 필요한지 자신의 말로 작성하세요
 ### 나의 판단
 
 이번 실습에서 어떤 정보는 LLM 또는 Public GitHub에 올리면 안 된다고 판단했는지 작성하세요.
-
+고객 정보가 담긴 customers.csv, 고객의 이름, 주소 등 개인 정보가 담겨있기 때문이다.
 ---
 
 ## 7. Chapter 01 Notebook 확인
@@ -277,7 +277,7 @@ notebooks/ch01_ai_data_analysis_intro.ipynb
 ### 내 환경 상태
 
 - [ ] 아직 환경설정 전이라 Notebook 위치만 확인했습니다.
-- [ ] 환경설정이 완료되어 Notebook을 직접 실행했습니다.
+- [V] 환경설정이 완료되어 Notebook을 직접 실행했습니다.
 
 ### 환경설정 완료 학생만 작성
 
@@ -293,29 +293,49 @@ import seaborn as sns
 
 DATA_DIR = Path('../data/raw')
 sns.set_theme(style='whitegrid')
+
+products = pd.read_csv(DATA_DIR / 'products.csv')
+order_items = pd.read_csv(DATA_DIR / 'order_items.csv')
+df = pd.merge(order_items, products, on='product_id', how='left')
+df.head()
+
+from mlxtend.frequent_patterns import apriori, association_rules
+basket = pd.crosstab(df['order_id'], df['product_id']) > 0
+ap=apriori(basket, min_support=0.01, use_colnames=True)
+ap
+
+rules = association_rules(ap, metric="lift", min_threshold=1)
+rules[(rules['lift']>2)&(rules['confidence']>0.2)]
 ```
 
 #### 실행 결과
 
 ```text
-오류 없이 실행되었는지 작성하세요.
+오류없이 파일을 읽고 직접 연관규칙분석까지 수행하여 빈발집합과 연관성이 강한 품목들을 찾을 수 있었다.
 ```
 
 #### 결과 관찰
 
 실행 결과에서 확인한 사실을 작성하세요.
+전자기기 상품 27과 스포츠 상품 41, 식품 상품 12와 식품 상품 58은 매우 강한 양의 연관성을 가지고 있다.
 
 #### 나의 해석과 판단
 
 현재 Notebook이 본격 분석이 아니라 starter scaffold라는 의미를 자신의 말로 설명하세요.
+맨땅에서 시작하는 것이 아니라 기본 토대가 갖춰져 있기 때문이다.
 
 #### 한계와 추가 확인 사항
 
 Chapter 02 또는 Chapter 03에서 추가로 확인해야 할 내용을 작성하세요.
+데이터의 품질을 의심하지 않고 분석을 수행했기에 앞서 말한 데이터의 품질 검증이 필요하다.
 
 #### Evidence
 
 ![STEP 7 Notebook 실행 결과](images/step07_notebook_result.png)
+<img width="1466" height="718" alt="image" src="https://github.com/user-attachments/assets/9a35cc48-e700-4b1c-b0f0-f8f00b4403db" />
+<img width="1324" height="948" alt="image" src="https://github.com/user-attachments/assets/35c7b566-a267-46e2-a8d0-3e8bc62581fd" />
+<img width="1430" height="656" alt="image" src="https://github.com/user-attachments/assets/b8892d97-b07a-4f54-8385-d0616fee9184" />
+
 
 > 환경설정 전이라면 이 이미지는 생략할 수 있습니다.
 
@@ -326,24 +346,24 @@ Chapter 02 또는 Chapter 03에서 추가로 확인해야 할 내용을 작성�
 ### 이번 장에서 가장 중요하다고 생각한 내용
 
 ```text
-자신의 말로 3~5문장 작성하세요.
+분석을 수행하는 것 그 자체보다도 무엇을 분석할지 결정하는 질문을 잘 던질 수 있어야 한다. 이런 질문을 llm에게 의존하고 검증을 하지 않으면 데이터 상에서나 분석 도중 문제가 발생할 수 있다. 분석 질문을 던질 때는 최대한 구체적으로 던지고, 실제 가지고 있는 데이터로 정답을 도출할 수 있는지 확인해봐야 한다.
 ```
 
 ### LLM을 데이터 분석에 사용할 때 가장 조심해야 할 점
 
 ```text
-자신의 판단을 작성하세요.
+llm에게 전권을 위임한 후 결과를 의심없이 받아들이는 것을 가장 조심해야 한다.
 ```
 
 ### 사람과 LLM의 역할 차이
 
 | 항목 | LLM이 도울 수 있는 부분 | 사람이 책임져야 하는 부분 |
 | --- | --- | --- |
-| 질문 정의 |  |  |
-| 데이터 확인 |  |  |
-| 코드 작성 |  |  |
-| 결과 해석 |  |  |
-| 최종 판단 |  |  |
+| 질문 정의 | V |  |
+| 데이터 확인 |  | V |
+| 코드 작성 | V |  |
+| 결과 해석 | V |  |
+| 최종 판단 |  | V |
 
 ### 다음 Chapter에서 확인하고 싶은 것
 
@@ -355,21 +375,21 @@ Chapter 02 또는 Chapter 03에서 추가로 확인해야 할 내용을 작성�
 
 ## 9. 최종 제출 체크리스트
 
-- [ ] 원래 업무 질문과 구체화한 분석 질문을 작성했습니다.
-- [ ] 질문에 필요한 데이터 파일과 컬럼 후보를 정리했습니다.
-- [ ] LLM Prompt와 답변 요약을 작성했습니다.
-- [ ] LLM 제안을 실제 데이터 관점에서 검증했습니다.
-- [ ] 각 핵심 STEP의 결과 관찰을 작성했습니다.
-- [ ] 각 핵심 STEP의 나의 해석과 판단을 작성했습니다.
-- [ ] 업무·분석적 의미를 작성했습니다.
-- [ ] 한계와 추가 확인 사항을 작성했습니다.
-- [ ] 핵심 실행 Evidence 이미지를 첨부했습니다.
-- [ ] 이미지가 Markdown에서 정상 표시됩니다.
-- [ ] 개인정보가 없습니다.
-- [ ] API Key·Secret·Token이 없습니다.
-- [ ] 개인 GitHub 저장소에 업로드했습니다.
-- [ ] GitHub에서 Markdown과 이미지가 정상 표시됩니다.
-- [ ] 아래 최종 파일 URL이 정상적으로 열립니다.
+- [V] 원래 업무 질문과 구체화한 분석 질문을 작성했습니다.
+- [V] 질문에 필요한 데이터 파일과 컬럼 후보를 정리했습니다.
+- [V] LLM Prompt와 답변 요약을 작성했습니다.
+- [V] LLM 제안을 실제 데이터 관점에서 검증했습니다.
+- [V] 각 핵심 STEP의 결과 관찰을 작성했습니다.
+- [V] 각 핵심 STEP의 나의 해석과 판단을 작성했습니다.
+- [V] 업무·분석적 의미를 작성했습니다.
+- [V] 한계와 추가 확인 사항을 작성했습니다.
+- [V] 핵심 실행 Evidence 이미지를 첨부했습니다.
+- [V] 이미지가 Markdown에서 정상 표시됩니다.
+- [V] 개인정보가 없습니다.
+- [V] API Key·Secret·Token이 없습니다.
+- [V] 개인 GitHub 저장소에 업로드했습니다.
+- [V] GitHub에서 Markdown과 이미지가 정상 표시됩니다.
+- [V] 아래 최종 파일 URL이 정상적으로 열립니다.
 
 ### 최종 파일 URL
 
@@ -389,11 +409,11 @@ https://github.com/<내-GitHub-ID>/llm-data-analysis-study/blob/main/chapter01/c
 ### 내가 가장 중요하게 내린 판단 1개
 
 ```text
-여기에 작성하세요.
+가지고 있는 데이터로 분석이 가능한 질문인가?.
 ```
 
 ### 아직 확인이 필요한 내용 1개
 
 ```text
-여기에 작성하세요.
+데이터 품질(이상치 및 결측치, FK 참조 무결성 등)
 ```
