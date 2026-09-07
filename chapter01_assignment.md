@@ -116,7 +116,6 @@ order_items의 order_id, product_id가 실제 FK 제약을 만족하는지(참�
 <img width="720" height="842" alt="image" src="https://github.com/user-attachments/assets/5db83b1e-2a17-4a90-9fdd-dd70e48328f9" />
 <img width="838" height="764" alt="image" src="https://github.com/user-attachments/assets/352e1dbc-9d6e-480c-925e-c50079a094f7" />
 <img width="738" height="838" alt="image" src="https://github.com/user-attachments/assets/48daa93b-a17b-4957-8493-05ccf7b06280" />
-<img width="712" height="774" alt="image" src="https://github.com/user-attachments/assets/f1083829-bcc1-42f7-8173-3df709199caa" />
 
 ---
 
