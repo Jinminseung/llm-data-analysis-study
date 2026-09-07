@@ -73,45 +73,50 @@ https://github.com/Jinminseung/llm-data-analysis-study/edit/main/chapter01_assig
 ### 필요한 데이터 파일
 
 - [ ] `customers.csv`
-- [ ] `products.csv`
-- [ ] `orders.csv`
-- [ ] `order_items.csv`
+- [O] `products.csv`
+- [O] `orders.csv`
+- [O] `order_items.csv`
 
 ### 필요한 컬럼 후보
 
 | 파일 | 필요한 컬럼 | 필요한 이유 |
 | --- | --- | --- |
-|  |  |  |
-|  |  |  |
-|  |  |  |
+| products.csv | product_id, product_name | 품목명 확인 |
+| orders.csv | order_id, order_date, order_status | 주문 날짜 및 주문 상태 확인 |
+| order_items.csv | order_id, product_id | 주문에 어떤 품목이 포함되었는지 확인 |
 
 ### 데이터 연결 관계
 
 ```text
-필요한 PK/FK 관계 또는 파일 연결 관계를 작성하세요.
+orders.csv의 PK인 order_id와 products.csv의 PK인 product_id가 order_items.csv의 FK
 ```
 
 ### 결과 관찰
-
 질문에 답하기 위해 어떤 데이터가 필요하다는 사실을 확인했는지 작성하세요.
+products.csv의 품목id와 품목명, orders.csv의 주문번호, 주문 날짜 및 주문 상태, order_items.csv의 주문에 포함된 품목이 필요하다.
 
 ### 나의 해석과 판단
 
 현재 데이터만으로 질문에 답할 수 있는지 판단하세요.
+현재 데이터만으로 분석 가능한 질문에 답할 수 있다. (주문 날짜 및 주문 상태로 최근 1개월 내 주문 완료된 주문 선별, 선별된 주문에 대해 품목별 주문에 포함된 횟수 집계 및 상위 10% 품목 도출 가능)
 
 ### 업무·분석적 의미
 
 질문과 데이터 구조를 먼저 연결하는 것이 왜 중요한지 작성하세요.
-
+만약 현재 가지고 있는 데이터만으로 질문을 해결할 수 없다면 추가적인 데이터 수집이 필요하기 때문이다.
 ### 한계와 추가 확인 사항
 
 실제 컬럼 존재 여부, 타입, 결측 등 아직 확인하지 못한 부분을 작성하세요.
-
+order_items의 order_id, product_id가 실제 FK 제약을 만족하는지(참조 무결성), 주문 날짜나 주문 상태 등에 결측값이나 물리적으로 불가능한 이상치는 없는지 추가적으로 확인해봐야 한다.
 ### Evidence
 
 필요한 경우 관계도 또는 데이터 파일 확인 화면을 첨부하세요.
 
 ![STEP 2 데이터 구조 확인](images/step02_data_structure.png)
+<img width="720" height="842" alt="image" src="https://github.com/user-attachments/assets/5db83b1e-2a17-4a90-9fdd-dd70e48328f9" />
+<img width="838" height="764" alt="image" src="https://github.com/user-attachments/assets/352e1dbc-9d6e-480c-925e-c50079a094f7" />
+<img width="738" height="838" alt="image" src="https://github.com/user-attachments/assets/48daa93b-a17b-4957-8493-05ccf7b06280" />
+<img width="712" height="774" alt="image" src="https://github.com/user-attachments/assets/f1083829-bcc1-42f7-8173-3df709199caa" />
 
 ---
 
@@ -120,45 +125,50 @@ https://github.com/Jinminseung/llm-data-analysis-study/edit/main/chapter01_assig
 ### 사용 목적
 
 ```text
-왜 LLM을 사용했는지 작성하세요.
+평소 고객 주문으로부터 어떤 분석을 해야 하는지, 어떤 가치를 끌어낼 수 있는지에 대해 깊이있게 배우거나 고민해본 적이 없어 분석 방향을 잡고자 llm을 사용하였다.
 ```
 
 ### 사용한 Prompt
 
 ```text
-여기에 실제 사용한 Prompt를 붙여 넣으세요.
-단, 개인정보·API Key·Secret은 포함하지 마세요.
+customers.csv에는 고객_id, 고객명, 고객 성별, 나이, 거주지, 가입일이 있고,  orders.csv에는 주문_id, 고객_id, 주문날짜, 결제수단, 주문상태가 있어. products.csv에는 상품_id, 상품명, 카테고리, 가격이 있어. order_items.csv에는 주문_품목_id, 주문_id, 상품_id, 주문 상품 수량, 단위 가격이 있어. 이 데이터를 토대로 유의미한 가치를 이끌어낼 수 있는 분석 질문을 5가지 정도 제시해줘
 ```
 
 ### LLM 답변 요약
 
 LLM의 전체 답변을 그대로 복사하지 말고 핵심 제안 3~5개를 요약하세요.
 
-1.
-2.
-3.
-4.
-5.
+1. 어떤 연령대와 거주 지역의 고객군이 특정 상품 카테고리를 가장 많이 구매하며, 객단가(AOV, Average Order Value)가 가장 높은 핵심 고객층은 누구인가?
+2. 고객의 가입 시기(월별/분기별)에 따라 첫 구매 전환 소요 기간과 1, 3, 6개월 차 재구매율(Retention Rate)은 어떤 차이를 보이는가?
+3. 동일한 주문_id 내에서 함께 자주 구매되는 상품 및 카테고리 조합(Cross-category purchasing)은 무엇인가?
+4. 최근성(R), 구매 빈도(F), 총 구매 금액(M)을 기준으로 고객군을 세분화했을 때, 전체 매출을 이끄는 상위 20% 핵심 고객(VIP)의 특징은 무엇인가?
+5. 주문 상태(완료, 취소, 반품 등)가 결제 수단이나 특정 카테고리/가격대와 어떤 상관관계를 갖는가?
 
 ### 결과 관찰
 
 LLM이 어떤 방향의 질문을 주로 제안했는지 사실 위주로 작성하세요.
+단순 기술 통계 혹은 통계적 분석뿐만 아니라 고급기법(주로 머신러닝 활용)을 통한 분석 역시 추천하였다. 또, 고객 또는 주문 전체를 비교하기보다는 다양한 고객 또는 주문으로 나누고 각 그룹의 특성을 비교하는 질문을 주로 제안했다. 
 
 ### 나의 해석과 판단
 
 좋았던 제안과 그대로 사용하기 어려운 제안을 구분해서 작성하세요.
+어떤 데이터가 있는지 프롬프트에 정확하게 명시했기 때문에 대부분의 질문들이 기존의 데이터를 토대로 결과를 도출할 수 있으며 모호하지 않은 질문이다. 다만 4번 질문에서 최근성이나 구매 빈도를 좀 더 구체적으로 정의할 필요가 있어보인다.
 
 ### 업무·분석적 의미
 
 LLM이 분석 시작 단계에서 어떤 도움을 줄 수 있다고 생각하는지 작성하세요.
+데이터 분석 시 해당 도메인에 대한 이해가 부족하여 적절한 질문을 도출해내지 못하거나, 변수 사이의 연관성을 짚어내지 못할 수 있다. 이런 경우 llm을 활용한다면 해당 도메인에 맞는 질문을 도출할 수 있으며, 필요 시 관련 도메인 정보를 통해 변수 사이의 연관성 파악도 가능하다. 또, 도메인에 적절한 분석 기법들을 추천받을 수도 있다.
 
 ### 한계와 추가 확인 사항
 
 LLM 답변에서 실제 데이터로 검증해야 할 내용을 작성하세요.
+어떤 데이터가 있는지를 프롬프트에 작성하였기 때문에 실제 데이터에서 앞서 말했던 FK의 참조 무결성 위배 여부, 결측치 여부 등 데이터에 이상이 있는지 확인하는 것이 중요하다.
 
 ### Evidence
 
 ![STEP 3 LLM Prompt와 응답](images/step03_llm_response.png)
+<img width="868" height="1208" alt="image" src="https://github.com/user-attachments/assets/e3fdc47f-612f-431e-86fc-115e2beec382" />
+<img width="786" height="706" alt="image" src="https://github.com/user-attachments/assets/9270d67b-c2c4-46ed-998c-3fa2e7a4e901" />
 
 ---
 
